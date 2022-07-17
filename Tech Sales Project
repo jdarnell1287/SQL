@@ -1,39 +1,68 @@
-//Queries specifically iPhone sales in Janurary//
+    //Queries specifically iPhone sales in Janurary//
 select count(orderid) as "Total Jan iPhone Orders" 
-    from bit_db0.jansales
+    from bit_db.jansales
         where product="iPhone";
 
-//Lists account number for all accounts that placed an order in Feb//
+    //Lists account number for all accounts that placed an order in Feb//
 select cust.acctnum as "Feb Account Orders"
-    from bit_db0.customers cust
-    left inner join bit_db0.febsales feb;
+    from bit_db.customers cust
+    left inner join bit_db.febsales feb;
 
-//Queries the cheapest product sold in Jan//
+    //Queries the cheapest product sold in Jan//
 select distinct product as "Cheapest Product Jan", min(price) as "Price"
-    from bit_db0.JanSales
+    from bit_db.JanSales
     group by product, price
     order by price asc limit 1;
 
-//Queries total revenue for Jan//
+    //Queries total revenue for Jan//
 select Product, sum(quantity)*price as "Total Jan Revenue"
-    from bit_db0.jansales
+    from bit_db.jansales
     group by product;
 
-//Queries prouct, total sold, and total revenue of each ordered to a specific address//
+    //Queries prouct, total sold, and total revenue of each ordered to a specific address//
 select Product, sum(quantity), sum (quantity)*price as "Total Revenue"
-    from bit_db0.febsales
+    from bit_db.febsales
     where location="548 Lincoln St, Seattle, WA 98101"
     group by product;
 
-//Queries total customers ordering more than 2 items in Feb and the average total of those orders//
+    //Queries total customers ordering more than 2 items in Feb and the average total of those orders//
 select count(cust.acctnum) as "Total Feb Orders", avg(quantity * price) as "Avg Spent" 
-     from bit_db0.febsales Feb
-      left join bit_db0.customers cust
+     from bit_db.febsales Feb
+      left join bit_db.customers cust
       on feb.orderID=cust.order_id
       where feb.Quantity > 2;
 
-//Queries Feb orders in Los Angeles, items ordered, and avg total//
+    //Queries Feb orders in Los Angeles, items ordered, and avg total//
 select Product, sum(quantity) as "Total Sold", round(sum (price)*quantity) as "Avg Revenue"
     from bit_db.febsales
     where location like "%Los Angeles%"
     group by product;
+
+    //Queries NY orders with 3 or more orders and their order total//
+select distinct Location, count(orderid) as "Total Orders"
+    from bit_db.jansales
+    where location like "%NY%"
+    group by location
+    having count(orderid) >2;
+    
+    //Queries headphone sales in Feb//    
+select distinct Product, sum(quantity) as "Total Feb Sales"  
+    from bit_db.febsales
+    where product like "%headphones%"
+    group by product;
+
+    //Queries avg amount spent per account in Feb//
+select count(feb.orderid) as "Total Orders", round (sum(feb.quantity)*feb.price/count(feb.orderid) )as " Avg Order Total"
+    from bit_db.febsales feb;
+
+    //Queries average quantity of products purchased per account in Feb//
+select sum(quantity)/count(cust.acctnum) as "Avg Items Per Order"
+    from bit_db.FebSales feb   
+    left outer join bit_db.customers cust
+    on feb.orderid = cust.order_id;
+    
+    //Queries top seller and total revenue generated in Jan//    
+select product as "Top Seller Jan", sum(quantity*price) as "Total Revenue"
+    from bit_db.jansales
+    group by product
+    order by sum(quantity*price) desc limit 1;
