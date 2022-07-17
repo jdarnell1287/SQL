@@ -1,0 +1,32 @@
+select count(orderid) as "Total Jan iPhone Orders" 
+    from bit_db0.jansales
+        where product="iPhone";
+
+
+select cust.acctnum as "Feb Account Orders"
+    from bit_db0.customers cust
+    left inner join bit_db0.febsales feb;
+
+
+select distinct product as "Cheapest Product Jan", min(price) as "Price"
+    from bit_db0.JanSales
+    group by product, price
+    order by price asc limit 1;
+
+
+select Product, sum(quantity)*price as "Total Jan Revenue"
+    from bit_db0.jansales
+    group by product;
+
+
+select Product, sum(quantity), sum (quantity)*price as "Total Revenue"
+    from bit_db0.febsales
+    where location="548 Lincoln St, Seattle, WA 98101"
+    group by product;
+
+
+select count(cust.acctnum) as "Total Feb Orders", avg(quantity * price) as "Avg Spent" 
+     from bit_db0.febsales Feb
+      left join bit_db0.customers cust
+      on feb.orderID=cust.order_id
+      where feb.Quantity > 2;
