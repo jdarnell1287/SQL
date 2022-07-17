@@ -1,30 +1,31 @@
+//Queries specifically iPhone sales in Janurary//
 select count(orderid) as "Total Jan iPhone Orders" 
     from bit_db0.jansales
         where product="iPhone";
 
-
+//Lists account number for all accounts that placed an order in Feb//
 select cust.acctnum as "Feb Account Orders"
     from bit_db0.customers cust
     left inner join bit_db0.febsales feb;
 
-
+//Queries the cheapest product sold in Jan//
 select distinct product as "Cheapest Product Jan", min(price) as "Price"
     from bit_db0.JanSales
     group by product, price
     order by price asc limit 1;
 
-
+//Queries total revenue for Jan//
 select Product, sum(quantity)*price as "Total Jan Revenue"
     from bit_db0.jansales
     group by product;
 
-
+//Queries prouct, total sold, and total revenue of each ordered to a specific address//
 select Product, sum(quantity), sum (quantity)*price as "Total Revenue"
     from bit_db0.febsales
     where location="548 Lincoln St, Seattle, WA 98101"
     group by product;
 
-
+//queries total customers ordering more than 2 items in Feb and the average total of those orders//
 select count(cust.acctnum) as "Total Feb Orders", avg(quantity * price) as "Avg Spent" 
      from bit_db0.febsales Feb
       left join bit_db0.customers cust
