@@ -25,9 +25,15 @@ select Product, sum(quantity), sum (quantity)*price as "Total Revenue"
     where location="548 Lincoln St, Seattle, WA 98101"
     group by product;
 
-//queries total customers ordering more than 2 items in Feb and the average total of those orders//
+//Queries total customers ordering more than 2 items in Feb and the average total of those orders//
 select count(cust.acctnum) as "Total Feb Orders", avg(quantity * price) as "Avg Spent" 
      from bit_db0.febsales Feb
       left join bit_db0.customers cust
       on feb.orderID=cust.order_id
       where feb.Quantity > 2;
+
+//Queries Feb orders in Los Angeles, items ordered, and avg total//
+select Product, sum(quantity) as "Total Sold", round(sum (price)*quantity) as "Avg Revenue"
+    from bit_db.febsales
+    where location like "%Los Angeles%"
+    group by product;
