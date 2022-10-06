@@ -1,0 +1,92 @@
+/*Queries the top sales person for 2009*/
+SELECT ROUND(SUM(invoices.Total)) as "Total Sales", employees.FirstName, employees.LastName from invoices
+    JOIN employees ON
+    employees.EmployeeId= invoices.CustomerId
+    JOIN customers ON
+    customers.CustomerId= invoices.CustomerId
+    WHERE invoices.InvoiceDate LIKE '2009%'
+    GROUP BY employees.FirstName
+    ORDER BY "Total Sales" DESC LIMIT 1;
+
+
+/*Queries total sales for each sales support agent*/
+SELECT ROUND(SUM(invoices.Total)) as "Total Sales", employees.FirstName, employees.LastName from invoices
+    JOIN employees ON
+    employees.EmployeeId= invoices.CustomerId
+    JOIN customers ON
+    customers.CustomerId= invoices.CustomerId
+    WHERE employees.Title = 'Sales Support Agent'
+    GROUP BY employees.FirstName;
+
+
+/*Queries all album information*/
+SELECT tracks.Name AS "Track" , albums.Title AS "Album", media_types.Name AS "Format", genres.Name AS "Genre"FROM tracks
+    JOIN albums ON
+    albums.AlbumId= tracks.AlbumId
+    JOIN media_types ON
+    media_types.MediaTypeId= tracks.MediaTypeId    
+    JOIN genres ON
+    genres.GenreId= tracks.GenreId;
+
+
+/* Queries invoice ID and the purchased song title and artist*/
+SELECT invoice_items.InvoiceLineId, tracks.Name, artists.Name FROM invoice_items
+    JOIN tracks ON
+    tracks.TrackId= invoice_items.TrackId
+    JOIN artists ON
+    artists.ArtistId= invoice_items.TrackId
+    ORDER BY invoice_items.InvoiceLineId ASC;
+
+
+/*Queries total sales for 2009*/
+SELECT SUM(Total) FROM invoices
+    WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+
+/*Queries total invoice count for 2009*/
+SELECT SUM(InvoiceId) FROM invoices
+    WHERE InvoiceDate BETWEEN '2009-01-01' AND '2009-12-31';
+
+
+/*Queries all invoice totals, customer and their location. Also shows Sales Agent associated with each*/
+SELECT invoices.Total, customers.FirstName as "Customer Name", customers.LastName as "", customers.Country, employees.FirstName  as "Sales Agent", employees.LastName as "" FROM customers
+    JOIN employees ON
+    employees.EmployeeId=customers.CustomerId
+    JOIN invoices ON
+    invoices.CustomerId=customers.CustomerId;
+
+
+/*Queries the invoices associated with each Sales Agent*/
+SELECT employees.FirstName, employees.LastName, invoices.InvoiceId FROM customers
+    JOIN employees ON
+    employees.EmployeeId=customers.CustomerId
+    JOIN invoices ON
+    invoices.CustomerId=customers.CustomerId;
+
+
+/*Queries a list of countries from the invoice database*/
+SELECT DISTINCT billingcountry FROM invoices
+    ORDER BY billingcountry ASC;
+
+
+/*Queries sales staff*/
+SELECT * FROM employees
+    WHERE title = "Sales Support Agent";
+
+
+/*Ties Brazilian customer's name to their invoice data and queries their name*/
+SELECT customers.firstname, customers.lastname, invoices.InvoiceId, invoices.InvoiceDate, invoices.BillingCountry FROM customers
+    JOIN invoices ON customers.CustomerId=invoices.InvoiceId
+    WHERE invoices.BillingCountry = "Brazil"
+    ORDER BY invoices.InvoiceId ASC;
+
+
+/*Queries all Brazilian customers*/
+SELECT firstname, lastname, customerid, country FROM customers
+    WHERE country="Brazil";
+
+    
+/*Queries all non-US based customers*/
+SELECT firstname, lastname, customerid, country FROM customers
+    WHERE NOT country="USA"
+    ORDER BY country ASC;
