@@ -1,0 +1,146 @@
+-- Interpreting data, analyzing results, and providing ongoing reports and dashboards
+SELECT
+    customer_id,
+    COUNT(DISTINCT order_id) AS total_orders,
+    AVG(order_amount) AS average_order_amount,
+    SUM(order_amount) AS total_revenue
+FROM
+    orders
+GROUP BY
+    customer_id;
+
+-- Managing projects to analyze, cleanse, enrich, and monitor master data element lists
+UPDATE
+    customers
+SET
+    email = LOWER(email),
+    phone_number = REPLACE(phone_number, '-', '')
+WHERE
+    customer_status = 'active';
+
+-- Creating, implementing, and maintaining master data management solutions
+CREATE TABLE IF NOT EXISTS customer_segments (
+    customer_id INT PRIMARY KEY,
+    segment VARCHAR(50)
+);
+
+INSERT INTO customer_segments (customer_id, segment)
+SELECT
+    customer_id,
+    CASE
+        WHEN total_orders >= 10 THEN 'loyal'
+        ELSE 'regular'
+    END AS segment
+FROM
+    (
+        SELECT
+            customer_id,
+            COUNT(DISTINCT order_id) AS total_orders
+        FROM
+            orders
+        GROUP BY
+            customer_id
+    ) AS order_summary;
+
+-- Utilizing data quality tools and techniques
+SELECT
+    *
+FROM
+    customers
+WHERE
+    email NOT LIKE '%@%';
+
+-- Improving and customizing current data solutions
+ALTER TABLE orders
+ADD COLUMN shipping_region VARCHAR(50);
+
+-- Directly managing the implementation of an enterprise-wide data inventory and data flow maps
+CREATE TABLE IF NOT EXISTS data_inventory (
+    table_name VARCHAR(100),
+    column_name VARCHAR(100),
+    data_type VARCHAR(50)
+);
+
+INSERT INTO data_inventory (table_name, column_name, data_type)
+SELECT
+    table_name,
+    column_name,
+    data_type
+FROM
+    information_schema.columns;
+
+-- Providing a leadership role for the Data Management program work group
+GRANT ALL PRIVILEGES ON data_inventory TO data_management_group;
+
+-- Helping lead the roadmap and socialization of business processes and data governance
+INSERT INTO roadmap (initiative, status)
+VALUES
+    ('Implement data governance framework', 'In progress'),
+    ('Define data quality metrics', 'Planned');
+
+-- Maintaining and supporting enterprise business intelligence reporting tools
+SELECT
+    *
+FROM
+    sales_report
+WHERE
+    year = YEAR(CURDATE());
+
+-- Documenting, profiling, and analyzing organization-wide data and databases
+SELECT
+    table_name,
+    column_name,
+    data_type,
+    column_key,
+    is_nullable
+FROM
+    information_schema.columns
+WHERE
+    table_schema = 'your_database_name';
+
+-- Developing a proactive methodology for effective data management
+CREATE EVENT IF NOT EXISTS data_analysis_event
+ON SCHEDULE EVERY 1 MONTH
+DO
+    BEGIN
+        -- Perform data analysis tasks here
+    END;
+
+-- Researching new and existing data sources for data quality initiatives
+SELECT
+    *
+FROM
+    external_data_sources
+WHERE
+    data_type = 'customer_demographics';
+
+-- Sample of strong SQL writing skills:
+
+-- Retrieving data using joins
+SELECT
+    customers.customer_id,
+    customers.first_name,
+    orders.order_date,
+    order_items.product_name,
+    order_items.quantity
+FROM
+    customers
+INNER JOIN orders ON customers.customer_id = orders.customer_id
+INNER JOIN order_items ON orders.order_id = order_items.order_id;
+
+-- Using aggregate functions and grouping data
+SELECT
+    category,
+    COUNT(*) AS total_products,
+    AVG(price) AS average_price,
+    MAX(price) AS max_price
+FROM
+    products
+GROUP BY
+    category;
+
+-- Applying subqueries
+SELECT
+    order_id,
+    order_date,
+    customer_id,
